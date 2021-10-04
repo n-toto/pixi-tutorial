@@ -28,3 +28,23 @@ app.ticker.add( delta => {
 });
 
 app.stage.addChild( titleText );
+
+const circle = new PIXI.Graphics()
+.beginFill(0xf00000)
+.drawCircle(0, 0, 20)
+.endFill()
+
+circle.position.set(100, 50);
+
+circle.interactive = true;
+circle.buttonMode = true;
+
+circle.on('pointertap', showAlert);
+
+function showAlert(e) {
+    console.log(e);
+    alert('circle was clicked')
+}
+
+app.stage.addChild( circle );
+
