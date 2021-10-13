@@ -3,13 +3,13 @@ if (!PIXI.utils.isWebGLSupported()) {
     type = "canvas";
 }
 
-PIXI.utils.sayHello(type);
-
-
 const width = 800;
 const height = 600;
 
 const birthday = new Date("1998/01/01");
+
+let birthday_map = {};
+let N = 10;
 
 //Create a Pixi Application
 const app = new PIXI.Application({ 
@@ -26,26 +26,40 @@ let el = document.getElementById('app');
 el.appendChild(app.view);
 
 const circles = [];
-for (var i = 0; i < 10; i++) {
+for (var i = 0; i < N; i++) {
     const circle = new PIXI.Graphics()
     .beginFill(0xf00000)
-    .drawCircle(0, 0, 20)
+    .drawCircle(Math.random() * width,  Math.random() * height, 20)
     .endFill();
-    circle.position.set( Math.random() * width,  Math.random() * height);
 
     circle.interactive = true;
     circle.buttonMode = true;
-    
+
     circle.on('pointertap', showAlert);
 
-    app.stage.addChild( circle );
+    app.stage.addChild(circle);
+    circles.push(circle);
+
+    birthday_map[i] = getRandomYmd('1920/01/01', '2020/01/01');
 }
 
 console.log(circles);
+console.log(birthday_map);
+
+const color = new PIXI.filters.ColorMatrixFilter();
+color.desaturate();
+const tint = 0x000000;
+const r = tint >> 16 & 0xFF;
+const g = tint >> 8 & 0xFF;
+const b = tint & 0xFF;
+color.matrix[0] = r / 255;
+color.matrix[6] = g / 255;
+color.matrix[12] = b / 255;
 
 function showAlert(e) {
-    let str = getRandomYmd('1920/01/01', '2020/01/01');
-    alert("Birthday is: " + str);
+    let index = circles.indexOf(e.target);
+    e.target.filters = [color];
+    alert("Birthday is: " + birthday_map[index]);
 }
 
 function getRandomYmd(fromYmd, toYmd){
@@ -62,4 +76,3 @@ function getRandomYmd(fromYmd, toYmd){
 
     return m + "/" + d;
 }
-
