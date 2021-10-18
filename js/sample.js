@@ -18,7 +18,7 @@ const app = new PIXI.Application({
     antialias: true,    // default: false
     transparent: false, // default: false
     resolution: 1,       // default: 1
-    backgroundColor: 0x1099bb,
+    backgroundColor: 0xDDDDDD,
 });
 
 //Add the canvas that Pixi automatically created for you to the HTML document
@@ -31,8 +31,8 @@ for (var i = 0; i < N; i++) {
     container.x = Math.random() * width;
     container.y = Math.random() * height;
     const circle = new PIXI.Graphics()
-    .beginFill(0xf00000)
-    .drawCircle(0, 0, 20)
+    .beginFill(0xCD853F)
+    .drawRect(-30, -25, 100, 50)
     .endFill();
 
     circle.interactive = true;
@@ -50,22 +50,11 @@ for (var i = 0; i < N; i++) {
 console.log(circles);
 console.log(birthday_map);
 
-const color = new PIXI.filters.ColorMatrixFilter();
-color.desaturate();
-const tint = 0x000000;
-const r = tint >> 16 & 0xFF;
-const g = tint >> 8 & 0xFF;
-const b = tint & 0xFF;
-color.matrix[0] = r / 255;
-color.matrix[6] = g / 255;
-color.matrix[12] = b / 255;
-
 const textStyle = new PIXI.TextStyle( { fill: 0xffffff } );
 
 function showAlert(e) {
     let index = circles.indexOf(e.target.parent);
     console.log(index);
-    e.target.filters = [color];
     
     const text = new PIXI.Text(birthday_map[index], textStyle );
     console.log(circles[index]);
