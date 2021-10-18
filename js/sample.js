@@ -56,10 +56,16 @@ color.matrix[0] = r / 255;
 color.matrix[6] = g / 255;
 color.matrix[12] = b / 255;
 
+const textStyle = new PIXI.TextStyle( { fill: 0xffffff } );
+
 function showAlert(e) {
     let index = circles.indexOf(e.target);
     e.target.filters = [color];
-    alert("Birthday is: " + birthday_map[index]);
+    
+    const text = new PIXI.Text(birthday_map[index], textStyle );
+    console.log(circles[index]);
+    text.position.set( circles[index].position.x, circles[index].position.y );
+    app.stage.addChild(text);
 }
 
 function getRandomYmd(fromYmd, toYmd){
