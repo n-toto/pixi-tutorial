@@ -27,9 +27,12 @@ el.appendChild(app.view);
 
 const circles = [];
 for (var i = 0; i < N; i++) {
+    const container = new PIXI.Container();
+    container.x = Math.random() * width;
+    container.y = Math.random() * height;
     const circle = new PIXI.Graphics()
     .beginFill(0xf00000)
-    .drawCircle(Math.random() * width,  Math.random() * height, 20)
+    .drawCircle(0, 0, 20)
     .endFill();
 
     circle.interactive = true;
@@ -37,8 +40,9 @@ for (var i = 0; i < N; i++) {
 
     circle.on('pointertap', showAlert);
 
-    app.stage.addChild(circle);
-    circles.push(circle);
+    container.addChild(circle);
+    app.stage.addChild(container);
+    circles.push(container);
 
     birthday_map[i] = getRandomYmd('1920/01/01', '2020/01/01');
 }
@@ -59,7 +63,8 @@ color.matrix[12] = b / 255;
 const textStyle = new PIXI.TextStyle( { fill: 0xffffff } );
 
 function showAlert(e) {
-    let index = circles.indexOf(e.target);
+    let index = circles.indexOf(e.target.parent);
+    console.log(index);
     e.target.filters = [color];
     
     const text = new PIXI.Text(birthday_map[index], textStyle );
