@@ -10,7 +10,7 @@ const birthday = new Date("1998/01/01");
 
 let birthday_map = {};
 let N = 30;
-let clicked_birthday = new Set();
+let clicked_birthday = new Array();
 
 //Create a Pixi Application
 const app = new PIXI.Application({ 
@@ -26,11 +26,13 @@ const app = new PIXI.Application({
 let el = document.getElementById('app');
 el.appendChild(app.view);
 
-const circles = [];
+const textStyle = new PIXI.TextStyle( { fill: 0xffffff } );
+
+const circles = []; // array of circle container
 for (var i = 0; i < N; i++) {
     const container = new PIXI.Container();
     container.x = width / 4 *  ( i%4 );
-    container.y = height / 8 * Math.floor(i/4) + 50;
+    container.y = height / 8 * Math.floor(i/4) + 25;
     const circle = new PIXI.Graphics()
     .beginFill(0xCD853F)
     .drawRect(50, 0, 100, 50)
@@ -48,18 +50,39 @@ for (var i = 0; i < N; i++) {
     birthday_map[i] = getRandomYmd('1920/01/01', '2020/01/01');
 }
 
-const textStyle = new PIXI.TextStyle( { fill: 0xffffff } );
+async function check_all() {
+    for (var i = 0; i < circles.length; i++) {
+        var timer = new Promise(function(resolve, reject) {
+            setTimeout(function() {
+                resolve();
+            }, 500);
+        });
+        await timer;
+        update(i);
+    }
+};
 
 function clicked(e) {
-    let index = circles.indexOf(e.target.parent);
-    
-    const text = new PIXI.Text(birthday_map[index], textStyle );
-    text.position.set( circles[index].position.x + 50, circles[index].position.y + 25 );
-    app.stage.addChild(text);
-    if (clicked_birthday.has(birthday_map[index])) {
+    update(circles.indexOf(e.target.parent));
+}
+
+function update(index) {
+    if (circles[index].children.length > 1) {
+        circles[index].removeChild(1, circles[index].children.length-1);
+        console.log(clicked_birthday.findIndex((elem) => elem == birthday_map[index]));
+        clicked_birthday.splice(clicked_birthday.findIndex((elem) => elem == birthday_map[index]), 1);
+        console.log(clicked_birthday.findIndex((elem) => elem == birthday_map[index]));
+    }
+
+    if (clicked_birthday.findIndex((elem) => elem == birthday_map[index]) != -1) {
         showAlert();
     }
-    clicked_birthday.add(birthday_map[index]);
+    
+    const text = new PIXI.Text(birthday_map[index], textStyle );
+    text.position.set( 50, 25 );
+    circles[index].addChild(text);
+    
+    clicked_birthday.push(birthday_map[index]);
 }
 
 function showAlert(e) {
