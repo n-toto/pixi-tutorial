@@ -9,7 +9,8 @@ const height = window.innerHeight;
 const birthday = new Date("1998/01/01");
 
 let birthday_map = {};
-let N = 10;
+let N = 30;
+let clicked_birthday = new Set();
 
 //Create a Pixi Application
 const app = new PIXI.Application({ 
@@ -29,7 +30,7 @@ const circles = [];
 for (var i = 0; i < N; i++) {
     const container = new PIXI.Container();
     container.x = width / 4 *  ( i%4 );
-    container.y = height / 4 * (Math.floor(i/4));
+    container.y = height / 8 * Math.floor(i/4) + 50;
     const circle = new PIXI.Graphics()
     .beginFill(0xCD853F)
     .drawRect(50, 0, 100, 50)
@@ -38,7 +39,7 @@ for (var i = 0; i < N; i++) {
     circle.interactive = true;
     circle.buttonMode = true;
 
-    circle.on('pointertap', showAlert);
+    circle.on('pointertap', clicked);
 
     container.addChild(circle);
     app.stage.addChild(container);
@@ -49,13 +50,20 @@ for (var i = 0; i < N; i++) {
 
 const textStyle = new PIXI.TextStyle( { fill: 0xffffff } );
 
-function showAlert(e) {
+function clicked(e) {
     let index = circles.indexOf(e.target.parent);
-    console.log(index);
     
     const text = new PIXI.Text(birthday_map[index], textStyle );
     text.position.set( circles[index].position.x + 50, circles[index].position.y + 25 );
     app.stage.addChild(text);
+    if (clicked_birthday.has(birthday_map[index])) {
+        showAlert();
+    }
+    clicked_birthday.add(birthday_map[index]);
+}
+
+function showAlert(e) {
+    alert("same birthday!!");
 }
 
 function getRandomYmd(fromYmd, toYmd){
