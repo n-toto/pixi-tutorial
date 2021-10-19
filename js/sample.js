@@ -3,8 +3,8 @@ if (!PIXI.utils.isWebGLSupported()) {
     type = "canvas";
 }
 
-const width = 800;
-const height = 600;
+const width = document.body.clientWidth;
+const height = window.innerHeight;
 
 const birthday = new Date("1998/01/01");
 
@@ -28,11 +28,11 @@ el.appendChild(app.view);
 const circles = [];
 for (var i = 0; i < N; i++) {
     const container = new PIXI.Container();
-    container.x = Math.random() * width;
-    container.y = Math.random() * height;
+    container.x = width / 4 *  ( i%4 );
+    container.y = height / 4 * (Math.floor(i/4));
     const circle = new PIXI.Graphics()
     .beginFill(0xCD853F)
-    .drawRect(-30, -25, 100, 50)
+    .drawRect(50, 0, 100, 50)
     .endFill();
 
     circle.interactive = true;
@@ -47,9 +47,6 @@ for (var i = 0; i < N; i++) {
     birthday_map[i] = getRandomYmd('1920/01/01', '2020/01/01');
 }
 
-console.log(circles);
-console.log(birthday_map);
-
 const textStyle = new PIXI.TextStyle( { fill: 0xffffff } );
 
 function showAlert(e) {
@@ -57,8 +54,7 @@ function showAlert(e) {
     console.log(index);
     
     const text = new PIXI.Text(birthday_map[index], textStyle );
-    console.log(circles[index]);
-    text.position.set( circles[index].position.x, circles[index].position.y );
+    text.position.set( circles[index].position.x + 50, circles[index].position.y + 25 );
     app.stage.addChild(text);
 }
 
