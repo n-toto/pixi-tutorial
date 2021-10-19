@@ -26,7 +26,8 @@ const app = new PIXI.Application({
 let el = document.getElementById('app');
 el.appendChild(app.view);
 
-const textStyle = new PIXI.TextStyle( { fill: 0xffffff } );
+const textBlack = new PIXI.TextStyle( { fill: 0x000000 } );
+const textWhite = new PIXI.TextStyle( { fill: 0xffffff } );
 
 const circles = []; // array of circle container
 for (var i = 0; i < N; i++) {
@@ -55,7 +56,7 @@ async function check_all() {
         var timer = new Promise(function(resolve, reject) {
             setTimeout(function() {
                 resolve();
-            }, 500);
+            }, 300);
         });
         await timer;
         update(i);
@@ -69,16 +70,16 @@ function clicked(e) {
 function update(index) {
     if (circles[index].children.length > 1) {
         circles[index].removeChild(1, circles[index].children.length-1);
-        console.log(clicked_birthday.findIndex((elem) => elem == birthday_map[index]));
         clicked_birthday.splice(clicked_birthday.findIndex((elem) => elem == birthday_map[index]), 1);
-        console.log(clicked_birthday.findIndex((elem) => elem == birthday_map[index]));
     }
-
-    if (clicked_birthday.findIndex((elem) => elem == birthday_map[index]) != -1) {
+    same_index = clicked_birthday.findIndex((elem) => elem == birthday_map[index]);
+    const text = new PIXI.Text(birthday_map[index], textWhite);
+    if (same_index != -1) {
+        circles[same_index].children[1].style = textBlack;
+        text.style = textBlack;
         showAlert();
     }
     
-    const text = new PIXI.Text(birthday_map[index], textStyle );
     text.position.set( 50, 25 );
     circles[index].addChild(text);
     
